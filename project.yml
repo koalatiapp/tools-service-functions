@@ -1,0 +1,17 @@
+packages:
+  - name: default
+    actions:
+      - name: request
+        runtime: 'nodejs:default'
+        limits:
+          timeout: 5000
+          memory: 128
+        environment:
+          AUTH_ACCESS_TOKEN: ${AUTH_ACCESS_TOKEN}
+          PGHOST: ${PGHOST}
+          PGUSER: ${PGUSER}
+          PGPASSWORD: ${PGPASSWORD}
+          PGDATABASE: ${PGDATABASE}
+          PGPORT: "${PGPORT}"
+          PG_DATABASE_CA_CERT: >
+            ${<ca-certificate.crt}
