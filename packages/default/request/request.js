@@ -13,13 +13,11 @@ exports.main = async (request) => {
 	const rowsToInsert = [];
 
 	for (const tool of tools) {
-		console.log(`Processing tool ${tool}`);
 		if (!/^@koalati\/.+/.test(tool)) {
 			throw new Error(`Invalid tool requested. ${tool} is either not a valid Koalati tool, or it is not installed.`);
 		}
 
 		for (const url of urls) {
-			console.log(`Processing URL ${url}`);
 			// Extract the hostname from the URL
 			const hostname = (new URL(url)).hostname;
 
@@ -37,13 +35,11 @@ exports.main = async (request) => {
 				return;
 			}
 
-			console.log(`Pushing to insert data`);
 			// Insert the request in the database
 			rowsToInsert.push([url, hostname, tool, priority]);
 		}
 	}
 
-	console.log(`About to insert`);
 	if (rowsToInsert.length) {
 		const queryParams = [];
 		let paramNumber = 1;
@@ -62,9 +58,7 @@ exports.main = async (request) => {
 			insertRowStrings.push(paramStrings.join(", "));
 		}
 
-		console.log(`Really about to insert`);
 		insertQuery += insertRowStrings.map(paramString => `(${paramString})`).join(", ");
-		console.log(insertQuery, queryParams);
 		database.query(insertQuery, queryParams);
 	}
 };

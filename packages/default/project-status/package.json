@@ -1,8 +1,8 @@
 {
-	"name": "request",
+	"name": "project-status",
 	"version": "0.1.0",
-	"description": "Submits a Koalati testing request",
-	"main": "request.js",
+	"description": "Returns the testing status for a given project URL.",
+	"main": "project-status.js",
 	"repository": {
 	  "type": "git",
 	  "url": "git+https://github.com/koalatiapp/tools-service-functions.git"
