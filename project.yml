@@ -13,5 +13,5 @@ packages:
           PGPASSWORD: ${PGPASSWORD}
           PGDATABASE: ${PGDATABASE}
           PGPORT: "${PGPORT}"
-          PG_DATABASE_CA_CERT: >
-            ${<ca-certificate.crt}
+          PG_DATABASE_CA_CERT: "${PG_DATABASE_CA_CERT}"
+          SENTRY_DSN: "${SENTRY_DSN}"
