@@ -21,12 +21,15 @@ exports.main = async (request) => {
 	const pendingRequests = await queue.getRequestsMatchingUrl(projectUrl);
 
 	return {
-		success: true,
-		message: "",
-		data: {
-			pending: pendingRequests.length > 0,
-			requestCount: pendingRequests.length,
-			timeEstimate: await estimateProcessingTime(pendingRequests),
-		},
-	};
+		headers:  { 'content-type': 'application/json; charset=UTF-8' },
+		body: JSON.stringify({
+			success: true,
+			message: "",
+			data: {
+				pending: pendingRequests.length > 0,
+				requestCount: pendingRequests.length,
+				timeEstimate: await estimateProcessingTime(pendingRequests),
+			},
+		})
+	}
 };
