@@ -1,6 +1,8 @@
 const queue = require("./queue.js")();
 const { MAX_CONCURRENT_SAME_HOST_REQUESTS } = process.env;
-const timesByToolPromise = queue.getAverageProcessingTimes();
+let timesByToolPromise = queue.getAverageProcessingTimes();
+
+setInterval(() => timesByToolPromise = queue.getAverageProcessingTimes(), 120000);
 
 async function getAverageTimeForTool(tool) {
 	const fallbackTime = 3000;
