@@ -1,3 +1,14 @@
+
+environment:
+  AUTH_ACCESS_TOKEN: ${AUTH_ACCESS_TOKEN}
+  PGHOST: ${PGHOST}
+  PGUSER: ${PGUSER}
+  PGPASSWORD: ${PGPASSWORD}
+  PGDATABASE: ${PGDATABASE}
+  PGPORT: "${PGPORT}"
+  PG_DATABASE_CA_CERT: "${PG_DATABASE_CA_CERT}"
+  SENTRY_DSN: "${SENTRY_DSN}"
+  MAX_CONCURRENT_SAME_HOST_REQUESTS: "${MAX_CONCURRENT_SAME_HOST_REQUESTS}"
 packages:
   - name: default
     actions:
@@ -6,43 +17,15 @@ packages:
         limits:
           timeout: 5000
           memory: 128
-        environment:
-          AUTH_ACCESS_TOKEN: ${AUTH_ACCESS_TOKEN}
-          PGHOST: ${PGHOST}
-          PGUSER: ${PGUSER}
-          PGPASSWORD: ${PGPASSWORD}
-          PGDATABASE: ${PGDATABASE}
-          PGPORT: "${PGPORT}"
-          PG_DATABASE_CA_CERT: "${PG_DATABASE_CA_CERT}"
-          SENTRY_DSN: "${SENTRY_DSN}"
       - name: project-status
         runtime: 'nodejs:default'
         limits:
           timeout: 5000
           memory: 128
-        environment:
-          AUTH_ACCESS_TOKEN: ${AUTH_ACCESS_TOKEN}
-          PGHOST: ${PGHOST}
-          PGUSER: ${PGUSER}
-          PGPASSWORD: ${PGPASSWORD}
-          PGDATABASE: ${PGDATABASE}
-          PGPORT: "${PGPORT}"
-          PG_DATABASE_CA_CERT: "${PG_DATABASE_CA_CERT}"
-          SENTRY_DSN: "${SENTRY_DSN}"
-          MAX_CONCURRENT_SAME_HOST_REQUESTS: "${MAX_CONCURRENT_SAME_HOST_REQUESTS}"
       - name: scale
         runtime: 'nodejs:default'
         limits:
           timeout: 5000
           memory: 128
         environment:
-          AUTH_ACCESS_TOKEN: ${AUTH_ACCESS_TOKEN}
-          PGHOST: ${PGHOST}
-          PGUSER: ${PGUSER}
-          PGPASSWORD: ${PGPASSWORD}
-          PGDATABASE: ${PGDATABASE}
-          PGPORT: "${PGPORT}"
-          PG_DATABASE_CA_CERT: "${PG_DATABASE_CA_CERT}"
-          SENTRY_DSN: "${SENTRY_DSN}"
-          MAX_CONCURRENT_SAME_HOST_REQUESTS: "${MAX_CONCURRENT_SAME_HOST_REQUESTS}"
           DO_API_TOKEN: "${DO_API_TOKEN}"
