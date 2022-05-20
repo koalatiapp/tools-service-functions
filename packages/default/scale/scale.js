@@ -46,11 +46,20 @@ exports.main = async (request) => {
 
 	if (currentContainerCount == idealContainerCount) {
 		console.log(`The app is already running on ${idealContainerCount} - there's nothing to do.`);
-		return;
+	} else {
+		console.log(`Sending DO an app spec update...`);
+
+		// @TODO: Call DO
+		// spec.services[0].instance_count = idealContainerCount;
 	}
 
-	console.log(`Sending DO an app spec update...`);
-
-	// @TODO: Call DO
-	// spec.services[0].instance_count = idealContainerCount;
+	return {
+		headers:  { 'content-type': 'application/json; charset=UTF-8' },
+		body: JSON.stringify({
+			success: true,
+			totalPendingRequests,
+			idealContainerCount,
+			currentContainerCount,
+		})
+	};
 };
