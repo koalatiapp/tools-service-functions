@@ -30,3 +30,9 @@ packages:
         environment:
           DO_API_TOKEN: "${DO_API_TOKEN}"
           TOOL_SERVICE_APP_ID: "${TOOL_SERVICE_APP_ID}"
+      - name: test-case
+        runtime: 'nodejs:default'
+        limits:
+          timeout: 5000
+          memory: 128
+
