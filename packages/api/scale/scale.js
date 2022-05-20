@@ -30,7 +30,7 @@ exports.main = async (request) => {
 		// end its testing. A single container should suffice, as the testing
 		// will likely be done by the time these changes applied and ready for
 		// processing.
-		if (requestCount <= 10) {
+		if (requestCount <= 20) {
 			idealContainerCount += 1;
 		}
 		// Otherwise, we'll provide 1 container per simultaneous request that
