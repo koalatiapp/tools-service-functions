@@ -20,13 +20,13 @@ async function getAverageTimeForTool(tool) {
  * the provided array of requests.
  *
  * This takes into account the concurrent processing of requests
- * from the same domain, assuming a 50% usage / load.
+ * from the same domain, assuming a 90% usage / load.
  *
  * @param {Array} requests Requests for which to estimate the processing time.
  * @param {Float} processingCapacityPercentage Percentage of the processing capacity that is used for calclations.
  * @returns {Promise<int>} Total processing time in milliseconds.
  */
-module.exports = async function estimateProcessingTime(requests, processingCapacityPercentage = 0.5) {
+module.exports = async function estimateProcessingTime(requests, processingCapacityPercentage = 0.9) {
 	const timeByProcessor = {};
 	const maxNbOfProcessors = Math.max(1, Math.floor(MAX_CONCURRENT_SAME_HOST_REQUESTS * processingCapacityPercentage));
 

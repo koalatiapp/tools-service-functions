@@ -10,7 +10,7 @@ environment:
   SENTRY_DSN: "${SENTRY_DSN}"
   MAX_CONCURRENT_SAME_HOST_REQUESTS: "${MAX_CONCURRENT_SAME_HOST_REQUESTS}"
 packages:
-  - name: default
+  - name: api
     actions:
       - name: request
         runtime: 'nodejs:default'
