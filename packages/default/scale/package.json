@@ -1,0 +1,29 @@
+{
+	"name": "scale",
+	"version": "0.1.0",
+	"description": "Scales the Tools Service app for the current number of pending requests",
+	"main": "scale.js",
+	"repository": {
+	  "type": "git",
+	  "url": "git+https://github.com/koalatiapp/tools-service-functions.git"
+	},
+	"keywords": [
+	  "koalati"
+	],
+	"author": {
+	  "name": "Koalati",
+	  "email": "info@koalati.com",
+	  "url": "https://www.koalati.com"
+	},
+	"license": "MIT",
+	"bugs": {
+	  "url": "https://github.com/koalatiapp/tools-service-functions/issues"
+	},
+	"homepage": "https://github.com/koalatiapp/tools-service-functions#readme",
+	"dependencies": {
+	  "@sentry/node": "^6.12.0",
+	  "@sentry/tracing": "^6.12.0",
+	  "pg": "^8.5.1",
+	  "dots-wrapper": "^3.7.6"
+	}
+  }
