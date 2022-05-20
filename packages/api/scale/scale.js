@@ -37,7 +37,7 @@ exports.main = async (request) => {
 			idealContainerCount += Math.min(clientRequests.count, MAX_CONCURRENT_SAME_HOST_REQUESTS);
 		}
 
-		totalPendingRequests += hostnameRequests.count;
+		totalPendingRequests += parseInt(hostnameRequests.count);
 	}
 
 	idealContainerCount = Math.max(idealContainerCount, 1);
