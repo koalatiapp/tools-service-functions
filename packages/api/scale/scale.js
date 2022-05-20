@@ -53,8 +53,8 @@ exports.main = async (request) => {
 		console.log(`Sending DO an app spec update...`);
 
 		// @TODO: Call DO
-		// spec.services[0].instance_count = idealContainerCount;
-		// await digitalOcean.app.updateApp({ app_id: TOOL_SERVICE_APP_ID, spec: updatedSpec });
+		spec.services[0].instance_count = idealContainerCount;
+		await digitalOcean.app.updateApp({ app_id: TOOL_SERVICE_APP_ID, spec: updatedSpec });
 	}
 
 	return {
