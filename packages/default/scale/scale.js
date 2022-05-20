@@ -4,6 +4,7 @@ const database = require("./utils/pg-pool.js")();
 const queue = require("./utils/queue.js")(database);
 const { createApiClient } = require('dots-wrapper');
 const digitalOcean = createApiClient({ token: process.DO_API_TOKEN });
+const TOOL_SERVICE_APP_ID = process.TOOL_SERVICE_APP_ID;
 const MAX_CONCURRENT_SAME_HOST_REQUESTS = parseInt(process.MAX_CONCURRENT_SAME_HOST_REQUESTS || 10);
 
 exports.main = async (request) => {
@@ -12,7 +13,7 @@ exports.main = async (request) => {
 	}
 
 	// Load current app spec from DO
-	const { data } = await digitalOcean.app.getApp({ app_id: toolServiceAppId });
+	const { data } = await digitalOcean.app.getApp({ app_id: TOOL_SERVICE_APP_ID });
 	const spec = data.app.spec;
 	const currentContainerCount = data.app.spec.services[0].instance_count;
 
@@ -51,6 +52,7 @@ exports.main = async (request) => {
 
 		// @TODO: Call DO
 		// spec.services[0].instance_count = idealContainerCount;
+		// await digitalOcean.app.updateApp({ app_id: TOOL_SERVICE_APP_ID, spec: updatedSpec });
 	}
 
 	return {

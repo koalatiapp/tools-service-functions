@@ -29,3 +29,4 @@ packages:
           memory: 128
         environment:
           DO_API_TOKEN: "${DO_API_TOKEN}"
+          TOOL_SERVICE_APP_ID: "${TOOL_SERVICE_APP_ID}"
