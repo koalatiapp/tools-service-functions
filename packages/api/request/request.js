@@ -61,6 +61,14 @@ exports.main = async (request) => {
 		insertQuery += insertRowStrings.map(paramString => `(${paramString})`).join(", ");
 		database.query(insertQuery, queryParams);
 	}
+
+	return {
+		headers:  { 'content-type': 'application/json; charset=UTF-8' },
+		body: JSON.stringify({
+			success: true,
+			requestsAdded: rowsToInsert.length,
+		})
+	};
 };
 
 async function getUnprocessedMatchingRequest(url, tool) {
