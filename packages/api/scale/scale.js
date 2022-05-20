@@ -24,20 +24,22 @@ exports.main = async (request) => {
 	console.log(`The app currently runs with ${currentContainerCount} containers.`);
 
 	for (const hostnameRequests of pendingCountByHostname) {
+		const requestCount = parseInt(hostnameRequests.count);
+
 		// If a hostname only has a few requests pending, it's likely about to
 		// end its testing. A single container should suffice, as the testing
 		// will likely be done by the time these changes applied and ready for
 		// processing.
-		if (hostnameRequests.count <= 10) {
+		if (requestCount <= 10) {
 			idealContainerCount += 1;
 		}
 		// Otherwise, we'll provide 1 container per simultaneous request that
 		// this host can handle.
 		else {
-			idealContainerCount += Math.min(clientRequests.count, MAX_CONCURRENT_SAME_HOST_REQUESTS);
+			idealContainerCount += Math.min(requestCount, MAX_CONCURRENT_SAME_HOST_REQUESTS);
 		}
 
-		totalPendingRequests += parseInt(hostnameRequests.count);
+		totalPendingRequests += requestCount;
 	}
 
 	idealContainerCount = Math.max(idealContainerCount, 1);
