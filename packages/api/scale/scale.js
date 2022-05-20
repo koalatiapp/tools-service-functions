@@ -3,9 +3,9 @@ require("./utils/sentry.js");
 const database = require("./utils/pg-pool.js")();
 const queue = require("./utils/queue.js")(database);
 const { createApiClient } = require('dots-wrapper');
-const digitalOcean = createApiClient({ token: process.DO_API_TOKEN });
-const TOOL_SERVICE_APP_ID = process.TOOL_SERVICE_APP_ID;
-const MAX_CONCURRENT_SAME_HOST_REQUESTS = parseInt(process.MAX_CONCURRENT_SAME_HOST_REQUESTS || 10);
+const digitalOcean = createApiClient({ token: process.env.DO_API_TOKEN });
+const TOOL_SERVICE_APP_ID = process.env.TOOL_SERVICE_APP_ID;
+const MAX_CONCURRENT_SAME_HOST_REQUESTS = parseInt(process.env.MAX_CONCURRENT_SAME_HOST_REQUESTS || 10);
 
 exports.main = async (request) => {
 	if (request.__ow_headers.authorization != `Bearer ${process.env.AUTH_ACCESS_TOKEN}`) {
