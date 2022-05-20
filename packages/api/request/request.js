@@ -32,7 +32,7 @@ exports.main = async (request) => {
 					await updateRequestPriority(existingRequest.id, priority);
 				}
 
-				return;
+				continue;
 			}
 
 			// Insert the request in the database
