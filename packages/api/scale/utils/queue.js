@@ -54,7 +54,8 @@ class Queue {
 		const res = await this.pool.query(`
 			SELECT REPLACE(hostname, 'www.', '') AS "hostname", COUNT(*) AS "count"
 			FROM requests
-			WHERE completed_at IS NULL
+			WHERE processed_at IS null
+			AND completed_at IS NULL
 			GROUP BY REPLACE(hostname, 'www.', '')
         `);
 		return res.rowCount > 0 ? res.rows : [];
