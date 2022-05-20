@@ -1,8 +1,0 @@
-{
-	"name": "test-case",
-	"version": "0.1.0",
-	"main": "test-case.js",
-	"dependencies": {
-		"dots-wrapper": "^3.7.6"
-	}
-  }
