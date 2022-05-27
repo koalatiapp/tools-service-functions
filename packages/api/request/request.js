@@ -56,22 +56,3 @@ exports.main = async (request) => {
 		})
 	};
 };
-
-async function getUnprocessedMatchingRequest(url, tool) {
-	const res = await database.query(`
-		SELECT *
-		FROM requests
-		WHERE completed_at IS NULL
-		AND url = $1
-		AND tool = $2
-	`, [url, tool]);
-	return res.rowCount > 0 ? res.rows[0] : null;
-}
-
-async function updateRequestPriority(requestId, newPriority) {
-	await database.query(`
-		UPDATE requests
-		SET priority = $1
-		WHERE id = $2
-	`, [newPriority, requestId]);
-}
