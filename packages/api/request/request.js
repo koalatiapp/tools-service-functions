@@ -21,20 +21,6 @@ exports.main = async (request) => {
 			// Extract the hostname from the URL
 			const hostname = (new URL(url)).hostname;
 
-			/*
-			* If an unprocessed request for this exact URL & tool already exists, there is no need to duplicate it.
-			* Just skip this request: both requesters will be notified when the existing is processed.
-			*/
-			const existingRequest = await getUnprocessedMatchingRequest(url, tool);
-			if (existingRequest) {
-				// If the new request has a higher priority than the existing one, update the existing request to bump its priority.
-				if (priority > existingRequest.priority) {
-					await updateRequestPriority(existingRequest.id, priority);
-				}
-
-				continue;
-			}
-
 			// Insert the request in the database
 			rowsToInsert.push([url, hostname, tool, priority]);
 		}
