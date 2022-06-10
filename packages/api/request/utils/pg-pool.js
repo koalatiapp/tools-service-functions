@@ -21,17 +21,19 @@ let poolInstance = null;
 module.exports = () => {
 	if (!poolInstance) {
 		const sslCAContents = getCACertificateContents();
+		const poolConfig = {
+			statement_timeout: 10000,
+			idle_in_transaction_session_timeout: 30000,
+		};
 
 		if (sslCAContents) {
-			poolInstance = new Pool({
-				ssl: {
-					rejectUnauthorized: false,
-					ca: sslCAContents,
-				},
-			});
-		} else {
-			poolInstance = new Pool();
+			poolConfig.ssl = {
+				rejectUnauthorized: false,
+				ca: sslCAContents,
+			};
 		}
+
+		poolInstance = new Pool(poolConfig);
 	}
 
 	return poolInstance;
