@@ -3,7 +3,6 @@ require("./utils/sentry.js");
 const database = require("./utils/pg-pool.js")();
 const queue = require("./utils/queue.js")(database);
 const { createApiClient } = require('dots-wrapper');
-const digitalOcean = createApiClient({ token: process.env.DO_API_TOKEN });
 const TOOL_SERVICE_APP_ID = process.env.TOOL_SERVICE_APP_ID;
 const MAX_CONCURRENT_SAME_HOST_REQUESTS = parseInt(process.env.MAX_CONCURRENT_SAME_HOST_REQUESTS || 10);
 
@@ -13,6 +12,7 @@ exports.main = async (request) => {
 	}
 
 	// Load current app spec from DO
+	const digitalOcean = createApiClient({ token: process.env.DO_API_TOKEN });
 	const { data } = await digitalOcean.app.getApp({ app_id: TOOL_SERVICE_APP_ID });
 	const spec = data.app.spec;
 	const currentContainerCount = data.app.spec.services[0].instance_count;
