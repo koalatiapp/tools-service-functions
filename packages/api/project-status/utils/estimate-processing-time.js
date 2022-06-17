@@ -1,15 +1,27 @@
-const queue = require("./queue.js")();
 const { MAX_CONCURRENT_SAME_HOST_REQUESTS } = process.env;
-let timesByToolPromise = queue.getAverageProcessingTimes();
+let timesByTool = null;
+let latestDataRefreshTimestamp = 0;
 
-setInterval(() => timesByToolPromise = queue.getAverageProcessingTimes(), 120000);
+async function refreshAverageProcessingTimesPromise()
+{
+	const queue = require("./queue.js")();
+
+	latestDataRefreshTimestamp = Date.now();
+	timesByTool = await queue.getAverageProcessingTimes();
+
+	await queue.disconnect();
+}
 
 async function getAverageTimeForTool(tool) {
 	const fallbackTime = 3000;
 
+	// Refresh the average times by tool if it's been too long since the data was fetched
+	if (!timesByTool || latestDataRefreshTimestamp < Date.now() - 120000) {
+		await refreshAverageProcessingTimesPromise();
+	}
+
 	try {
-		const timesByTool = (await timesByToolPromise).average;
-		const toolEstimates = timesByTool[tool] || {};
+		const toolEstimates = timesByTool.average[tool] || {};
 
 		return parseInt(toolEstimates.processing_time || fallbackTime);
 	} catch (err) {

@@ -1,7 +1,5 @@
 require("./utils/sentry.js");
 
-const database = require("./utils/pg-pool.js")();
-const queue = require("./utils/queue.js")(database);
 const estimateProcessingTime = require("./utils/estimate-processing-time.js");
 
 exports.main = async (request) => {
@@ -18,7 +16,9 @@ exports.main = async (request) => {
 		};
 	}
 
+	const queue = require("./utils/queue.js")();
 	const pendingRequests = await queue.getRequestsMatchingUrl(projectUrl);
+	await queue.disconnect();
 
 	return {
 		headers:  { 'content-type': 'application/json; charset=UTF-8' },
