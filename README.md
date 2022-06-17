@@ -4,4 +4,5 @@ This contains serverless functions to help lighten the load on the tools service
 
 This repo is configured to work on DigitalOcean's serverless functions (Nimbella).
 
-For more information, check out [koalatiapp/tools-service](https://github.com/koalatiapp/tools-service).
+For more information, check out [koalatiapp/tools-service](https://github.com/koalatiapp/tools-service) 
+(the code and concepts in this repository are heavily based on the tools-service repository).
