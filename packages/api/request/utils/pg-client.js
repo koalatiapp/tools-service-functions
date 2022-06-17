@@ -15,13 +15,13 @@ if (PG_DATABASE_CA_CERT) {
 	};
 }
 
-let clientCount = 1;
+let clientCount = 0;
 let openCount = 0;
 
 module.exports = async () => {
-	const clientId = clientCount;
 	clientCount += 1;
 
+	const clientId = clientCount;
 	const client = new Client(config);
 
 	try {
