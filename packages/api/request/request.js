@@ -46,7 +46,7 @@ exports.main = async (request) => {
 
 		const pgClient = await createPgClient();
 		insertQuery += insertRowStrings.map(paramString => `(${paramString})`).join(", ");
-		pgClient.query(insertQuery, queryParams);
+		await pgClient.query(insertQuery, queryParams);
 		await pgClient.end();
 	}
 
