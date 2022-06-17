@@ -1,7 +1,5 @@
 require("./utils/sentry.js");
 
-const database = require("./utils/pg-pool.js")();
-const queue = require("./utils/queue.js")(database);
 const { createApiClient } = require('dots-wrapper');
 const TOOL_SERVICE_APP_ID = process.env.TOOL_SERVICE_APP_ID;
 const MAX_CONCURRENT_SAME_HOST_REQUESTS = parseInt(process.env.MAX_CONCURRENT_SAME_HOST_REQUESTS || 10);
@@ -18,7 +16,10 @@ exports.main = async (request) => {
 	const currentContainerCount = data.app.spec.services[0].instance_count;
 
 	// Calculate the ideal number of containers for the current request queue
+	const queue = require("./utils/queue.js")();
 	const pendingCountByHostname = await queue.pendingCountByHostname();
+	await queue.disconnect();
+
 	let idealContainerCount = 0;
 	let totalPendingRequests = 0;
 	console.log(`The app currently runs with ${currentContainerCount} containers.`);
