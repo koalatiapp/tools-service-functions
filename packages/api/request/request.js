@@ -7,8 +7,8 @@ exports.main = async (request) => {
 		throw new Error("Unauthorized");
 	}
 
-	const urls = request.urls ?? [];
-	const tools = request.tools ?? [];
+	const urls = Object.values(request.urls ?? []);
+	const tools = Object.values(request.tools ?? []);
 	let priority = request.priority ?? 1;
 	const rowsToInsert = [];
 
