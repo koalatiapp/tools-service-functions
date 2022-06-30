@@ -12,6 +12,8 @@ exports.main = async (request) => {
 	let priority = request.priority ?? 1;
 	const rowsToInsert = [];
 
+	console.log("Received testing request with the following payload:", request);
+
 	for (const tool of tools) {
 		if (!/^@koalati\/.+/.test(tool)) {
 			throw new Error(`Invalid tool requested. ${tool} is either not a valid Koalati tool, or it is not installed.`);
@@ -25,6 +27,8 @@ exports.main = async (request) => {
 			rowsToInsert.push([url, hostname, tool, priority]);
 		}
 	}
+
+	console.log(`${rowsToInsert.length} rows to insert in request database`);
 
 	if (rowsToInsert.length) {
 		const queryParams = [];
