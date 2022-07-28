@@ -15,12 +15,12 @@ packages:
       - name: request
         runtime: 'nodejs:default'
         limits:
-          timeout: 5000
+          timeout: 15000
           memory: 128
       - name: project-status
         runtime: 'nodejs:default'
         limits:
-          timeout: 5000
+          timeout: 15000
           memory: 128
       - name: scale
         runtime: 'nodejs:default'
