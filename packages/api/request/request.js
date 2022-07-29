@@ -1,13 +1,16 @@
 require("./utils/sentry.js");
 
 const createPgClient = require("./utils/pg-client.js");
+const maxPages = 500;
 
 exports.main = async (request) => {
 	if (request.__ow_headers.authorization != `Bearer ${process.env.AUTH_ACCESS_TOKEN}`) {
 		throw new Error("Unauthorized");
 	}
 
-	const urls = Object.values(request.urls ?? []);
+	const urls = Object.values(request.urls ?? [])
+		.sort((a, b) => a.length > b.length ? 1 : -1) // Relevant pages often have shorter URLs
+		.slice(0, maxPages); // Limit number of pages to scan
 	const tools = Object.values(request.tools ?? []);
 	let priority = request.priority ?? 1;
 	const rowsToInsert = [];
