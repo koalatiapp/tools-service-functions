@@ -30,4 +30,9 @@ packages:
         environment:
           DO_API_TOKEN: "${DO_API_TOKEN}"
           TOOL_SERVICE_APP_ID: "${TOOL_SERVICE_APP_ID}"
+      - name: metas
+        runtime: 'nodejs:default'
+        limits:
+          timeout: 10000
+          memory: 128
 
