@@ -35,4 +35,9 @@ packages:
         limits:
           timeout: 10000
           memory: 128
+      - name: cleanup-requests
+        runtime: 'nodejs:default'
+        limits:
+          timeout: 15000
+          memory: 128
 
