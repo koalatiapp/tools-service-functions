@@ -3,6 +3,8 @@ require("./utils/sentry.js");
 const { createApiClient } = require('dots-wrapper');
 const TOOL_SERVICE_APP_ID = process.env.TOOL_SERVICE_APP_ID;
 const MAX_CONCURRENT_SAME_HOST_REQUESTS = parseInt(process.env.MAX_CONCURRENT_SAME_HOST_REQUESTS || 10);
+let previousPendingRequestCount = null;
+let previousForcedDeployTimestamp = null;
 
 exports.main = async (request) => {
 	if (request.__ow_headers.authorization != `Bearer ${process.env.AUTH_ACCESS_TOKEN}`) {
@@ -50,6 +52,21 @@ exports.main = async (request) => {
 
 	if (currentContainerCount == idealContainerCount) {
 		console.log(`The app is already running on ${idealContainerCount} - there's nothing to do.`);
+
+		if (previousPendingRequestCount == totalPendingRequests && totalPendingRequests != 0) {
+			console.log(`It looks like request processing may be jammed.`);
+
+			if (previousForcedDeployTimestamp && (Date.now() - previousForcedDeployTimestamp) / 1000 < 300000) {
+				console.log(`A forced deploy was already done in the past 5 minutes, we'll wait a bit before we retry.`);
+			} else {
+				console.log(`Forcing a redeploy to get things moving...`);
+
+				await digitalOcean.app.createAppDeployment({ app_id: TOOL_SERVICE_APP_ID, spec });
+				previousForcedDeployTimestamp = Date.now();
+
+				console.log(`Redeploy has been queued!`);
+			}
+		}
 	} else {
 		console.log(`Sending DO an app spec update...`);
 
@@ -58,6 +75,8 @@ exports.main = async (request) => {
 
 		console.log(`The app has been updated on DO!`);
 	}
+
+	previousPendingRequestCount = totalPendingRequests;
 
 	return {
 		headers:  { 'content-type': 'application/json; charset=UTF-8' },
