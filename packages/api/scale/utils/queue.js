@@ -1,36 +1,36 @@
-const createPgClient = require("./pg-client.js");
+const createDatabaseClient = require("./database.js");
 
 class Queue {
 	constructor()
 	{
-		this.pgClient = null;
-		this._pgClientPromise = createPgClient()
-			.then(client => this.pgClient = client);
+		this.database = null;
+		this._databasePromise = createDatabaseClient()
+			.then(client => this.database = client);
 	}
 
-	async _waitForPgConnection()
+	async _waitForDatabaseConnection()
 	{
-		await this._pgClientPromise;
+		await this._databasePromise;
 	}
 
 	async disconnect()
 	{
-		await this._waitForPgConnection();
-		await this.pgClient.end();
+		await this._waitForDatabaseConnection();
+		await this.database.end();
 	}
 
 	async getUnprocessedMatchingRequest(url, tool) {
-		await this._waitForPgConnection();
+		await this._waitForDatabaseConnection();
 
-		const res = await this.pgClient.query(`
+		const [rows] = await this.database.query(`
             SELECT *
             FROM requests
             WHERE completed_at IS NULL
-            AND url = $1
-            AND tool = $2
+            AND url = ?
+            AND tool = ?
         `, [url, tool]);
 
-		return res.rowCount > 0 ? res.rows[0] : null;
+		return rows.length > 0 ? rows[0] : null;
 	}
 
 	/**
@@ -38,44 +38,44 @@ class Queue {
 	 * @returns {Promise<object[]>}
 	 */
 	async getRequestsMatchingUrl(url) {
-		await this._waitForPgConnection();
+		await this._waitForDatabaseConnection();
 
-		const res = await this.pgClient.query(`
+		const [rows] = await this.database.query(`
             SELECT *
             FROM requests
             WHERE completed_at IS NULL
-            AND url LIKE $1
+            AND url LIKE ?
         `, [url + "%"]);
 
-		return res.rowCount > 0 ? res.rows : [];
+		return rows.length > 0 ? rows : [];
 	}
 
 	async updateRequestPriority(requestId, newPriority) {
-		await this._waitForPgConnection();
-		await this.pgClient.query(`
+		await this._waitForDatabaseConnection();
+		await this.database.query(`
             UPDATE requests
-            SET priority = $1
-            WHERE id = $2
+            SET priority = ?
+            WHERE id = ?
         `, [newPriority, requestId]);
 	}
 
 	async pendingCount() {
-		await this._waitForPgConnection();
+		await this._waitForDatabaseConnection();
 
-		const res = await this.pgClient.query(`
+		const [rows] = await this.database.query(`
             SELECT COUNT(*) AS "count"
             FROM requests
             WHERE processed_at IS NOT NULL
             AND completed_at IS NULL
         `);
 
-		return res.rows[0].count;
+		return rows[0].count;
 	}
 
 	async pendingCountByHostname() {
-		await this._waitForPgConnection();
+		await this._waitForDatabaseConnection();
 
-		const res = await this.pgClient.query(`
+		const [rows] = await this.database.query(`
 			SELECT REPLACE(hostname, 'www.', '') AS "hostname", COUNT(*) AS "count"
 			FROM requests
 			WHERE processed_at IS null
@@ -83,68 +83,68 @@ class Queue {
 			GROUP BY REPLACE(hostname, 'www.', '')
         `);
 
-		return res.rowCount > 0 ? res.rows : [];
+		return rows.length > 0 ? rows : [];
 	}
 
 	async nonAssignedCount() {
-		await this._waitForPgConnection();
+		await this._waitForDatabaseConnection();
 
-		const res = await this.pgClient.query(`
+		const [rows] = await this.database.query(`
             SELECT COUNT(*) AS "count"
             FROM requests
             WHERE processed_at IS NULL
         `);
 
-		return res.rows[0].count;
+		return rows[0].count;
 	}
 
 	async getAverageProcessingTimes() {
-		await this._waitForPgConnection();
+		await this._waitForDatabaseConnection();
 
 		const timesByTool = {
 			lowPriority: {},
 			highPriority: {},
 			average: {},
 		};
-		const lowPriorityResult = await this.pgClient.query(`
-            SELECT tool, ROUND(AVG(processing_time)) AS processing_time, ROUND(AVG(EXTRACT(EPOCH FROM (completed_at - received_at))) * 1000) AS completion_time
+		const [lowPriorityRows] = await this.database.query(`
+            SELECT tool, ROUND(AVG(processing_time)) AS processing_time, ROUND(AVG(TIMESTAMPDIFF(SECOND, completed_at, received_at))) AS completion_time
             FROM requests
             WHERE completed_at IS NOT NULL
             AND priority = 1
             GROUP BY tool
             LIMIT 10000;
         `);
-		const highPriorityResult = await this.pgClient.query(`
-            SELECT tool, ROUND(AVG(processing_time)) AS processing_time, ROUND(AVG(EXTRACT(EPOCH FROM (completed_at - received_at))) * 1000) AS completion_time
+		const [highPriorityRows] = await this.database.query(`
+            SELECT tool, ROUND(AVG(processing_time)) AS processing_time, ROUND(AVG(TIMESTAMPDIFF(SECOND, completed_at, received_at))) AS completion_time
             FROM requests
             WHERE completed_at IS NOT NULL
             AND priority > 1
             GROUP BY tool
             LIMIT 10000;
         `);
-		const averageResult = await this.pgClient.query(`
-            SELECT tool, ROUND(AVG(processing_time)) AS processing_time, ROUND(AVG(EXTRACT(EPOCH FROM (completed_at - received_at))) * 1000) AS completion_time
+		const [averageRows] = await this.database.query(`
+            SELECT tool, ROUND(AVG(processing_time)) AS processing_time, ROUND(AVG(TIMESTAMPDIFF(SECOND, completed_at, received_at))) AS completion_time
             FROM requests
             WHERE completed_at IS NOT NULL
             GROUP BY tool
             LIMIT 10000;
         `);
 
-		for (const row of lowPriorityResult.rows) {
+		for (const row of lowPriorityRows) {
 			timesByTool.lowPriority[row.tool] = {
 				processing_time: row.processing_time,
 				completion_time: row.completion_time
 			};
 		}
 
-		for (const row of highPriorityResult.rows) {
+		for (const row of highPriorityRows) {
 			timesByTool.highPriority[row.tool] = {
 				processing_time: row.processing_time,
 				completion_time: row.completion_time
 			};
 		}
 
-		for (const row of averageResult.rows) {
+		for (const row of averageRows) {
 			timesByTool.average[row.tool] = {
 				processing_time: row.processing_time,
 				completion_time: row.completion_time

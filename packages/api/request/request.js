@@ -1,6 +1,6 @@
 require("./utils/sentry.js");
 
-const createPgClient = require("./utils/pg-client.js");
+const createDatabaseClient = require("./utils/database.js");
 
 exports.main = async (request) => {
 	if (request.__ow_headers.authorization != `Bearer ${process.env.AUTH_ACCESS_TOKEN}`) {
@@ -32,7 +32,6 @@ exports.main = async (request) => {
 
 	if (rowsToInsert.length) {
 		const queryParams = [];
-		let paramNumber = 1;
 		let insertQuery = "INSERT INTO requests (url, hostname, tool, priority) VALUES ";
 		let insertRowStrings = [];
 
@@ -41,17 +40,16 @@ exports.main = async (request) => {
 
 			for (const paramValue of row) {
 				queryParams.push(paramValue);
-				paramStrings.push("$" + paramNumber);
-				paramNumber += 1;
+				paramStrings.push("?");
 			}
 
 			insertRowStrings.push(paramStrings.join(", "));
 		}
 
-		const pgClient = await createPgClient();
+		const database = await createDatabaseClient();
 		insertQuery += insertRowStrings.map(paramString => `(${paramString})`).join(", ");
-		await pgClient.query(insertQuery, queryParams);
-		await pgClient.end();
+		await database.query(insertQuery, queryParams);
+		await database.end();
 	}
 
 	return {

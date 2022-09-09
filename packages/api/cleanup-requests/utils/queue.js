@@ -1,31 +1,31 @@
-const createPgClient = require("./pg-client.js");
+const createDatabaseClient = require("./database.js");
 
 class Queue {
 	constructor()
 	{
-		this.pgClient = null;
-		this._pgClientPromise = createPgClient()
-			.then(client => this.pgClient = client);
+		this.database = null;
+		this._databasePromise = createDatabaseClient()
+			.then(client => this.database = client);
 	}
 
-	async _waitForPgConnection()
+	async _waitForDatabaseConnection()
 	{
-		await this._pgClientPromise;
+		await this._databasePromise;
 	}
 
 	async disconnect()
 	{
-		await this._waitForPgConnection();
-		await this.pgClient.end();
+		await this._waitForDatabaseConnection();
+		await this.database.end();
 	}
 
 	async deleteOldRequests() {
-		await this._waitForPgConnection();
-		await this.pgClient.query(`
+		await this._waitForDatabaseConnection();
+		await this.database.query(`
             DELETE
 			FROM requests
 			WHERE completed_at IS NOT NULL
-			AND completed_at < (now()::timestamp - interval '2 week')
+			AND completed_at < (NOW() - interval 2 week)
         `);
 	}
 }
