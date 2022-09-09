@@ -1,5 +1,5 @@
+const fs = require("fs");
 const mysql = require("mysql2/promise");
-const caCertBuffer = Buffer.from(DATABASE_CA_CERT_BASE64, "base64");
 
 module.exports = async () => {
 	const config = {
@@ -8,7 +8,7 @@ module.exports = async () => {
 		password: process.env.DATABASE_PASSWORD,
 		database: process.env.DATABASE_NAME,
 		ssl: {
-			ca: caCertBuffer,
+			ca: fs.readFileSync(process.env.DATABASE_CA_CERT || "/etc/ssl/certs/ca-certificates.crt"),
 		},
 	};
 	let client;
