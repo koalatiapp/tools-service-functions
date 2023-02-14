@@ -24,7 +24,7 @@ packages:
         runtime: 'nodejs:default'
         limits:
           timeout: 5000
-          memory: 128
+          memory: 256
         environment:
           DO_API_TOKEN: "${DO_API_TOKEN}"
           TOOL_SERVICE_APP_ID: "${TOOL_SERVICE_APP_ID}"
@@ -37,5 +37,5 @@ packages:
         runtime: 'nodejs:default'
         limits:
           timeout: 15000
-          memory: 128
+          memory: 256
 
