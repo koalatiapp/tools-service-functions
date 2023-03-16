@@ -19,7 +19,7 @@ packages:
         runtime: 'nodejs:default'
         limits:
           timeout: 15000
-          memory: 128
+          memory: 256
       - name: scale
         runtime: 'nodejs:default'
         limits:
