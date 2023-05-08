@@ -3,6 +3,7 @@ require("./utils/sentry.js");
 const { createApiClient } = require('dots-wrapper');
 const TOOL_SERVICE_APP_ID = process.env.TOOL_SERVICE_APP_ID;
 const MAX_CONCURRENT_SAME_HOST_REQUESTS = parseInt(process.env.MAX_CONCURRENT_SAME_HOST_REQUESTS || 10);
+const MAX_CONTAINER_HARD_LIMIT = parseInt(process.env.MAX_CONTAINER_HARD_LIMIT || 20);
 let previousPendingRequestCount = null;
 let previousForcedDeployTimestamp = null;
 
@@ -49,6 +50,11 @@ exports.main = async (request) => {
 
 	console.log(`There are ${totalPendingRequests} pending requests split between ${pendingCountByHostname.length} hostnames.`);
 	console.log(`Based on that, the app should ideally run on ${idealContainerCount} containers.`);
+
+	if (idealContainerCount > MAX_CONTAINER_HARD_LIMIT) {
+		console.log(`Hard limit set in service config is ${MAX_CONTAINER_HARD_LIMIT} containers. This will be used instead.`);
+		idealContainerCount = MAX_CONTAINER_HARD_LIMIT;
+	}
 
 	if (currentContainerCount == idealContainerCount) {
 		console.log(`The app is already running on ${idealContainerCount} - there's nothing to do.`);
