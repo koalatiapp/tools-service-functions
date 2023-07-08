@@ -1,3 +1,3 @@
 #!/bin/bash
 set -e
-composer install
+composer install --no-scripts --no-plugins --no-interaction
