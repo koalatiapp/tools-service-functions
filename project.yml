@@ -38,4 +38,15 @@ packages:
         limits:
           timeout: 15000
           memory: 256
+      - name: enqueue-test-result
+        runtime: 'php:8.2'
+        limits:
+          timeout: 5000
+          memory: 128
+        environment:
+          APP_DATABASE_HOST: ${APP_DATABASE_HOST}
+          APP_DATABASE_USER: ${APP_DATABASE_USER}
+          APP_DATABASE_PASSWORD: ${APP_DATABASE_PASSWORD}
+          APP_DATABASE_NAME: ${APP_DATABASE_NAME}
+          APP_DATABASE_PORT: ${APP_DATABASE_PORT}
 

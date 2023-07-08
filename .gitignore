@@ -124,3 +124,6 @@ __deployer__.zip
 package-lock.json
 
 ca-certificate.crt
+
+composer.lock
+vendor/
