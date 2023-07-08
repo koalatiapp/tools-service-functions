@@ -5,6 +5,8 @@ use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Stamp\BusNameStamp;
 
 require_once './includes/testing-result-request.php';
+require_once './includes/envelope.php';
+require_once './includes/bus-name-stamp.php';
 
 function main(array $event): array
 {
