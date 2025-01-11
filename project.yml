@@ -5,6 +5,7 @@ environment:
   DATABASE_USER: ${DATABASE_USER}
   DATABASE_PASSWORD: ${DATABASE_PASSWORD}
   DATABASE_NAME: ${DATABASE_NAME}
+  DATABASE_CA_CERT: "${DATABASE_CA_CERT}"
   SENTRY_DSN: "${SENTRY_DSN}"
   MAX_CONCURRENT_SAME_HOST_REQUESTS: "${MAX_CONCURRENT_SAME_HOST_REQUESTS}"
 packages:
@@ -28,6 +29,7 @@ packages:
         environment:
           DO_API_TOKEN: "${DO_API_TOKEN}"
           TOOL_SERVICE_APP_ID: "${TOOL_SERVICE_APP_ID}"
+          MAX_CONTAINER_HARD_LIMIT: "${MAX_CONTAINER_HARD_LIMIT}"
       - name: metas
         runtime: 'nodejs:default'
         limits:
