@@ -8,7 +8,7 @@ module.exports = async () => {
 		password: process.env.DATABASE_PASSWORD,
 		database: process.env.DATABASE_NAME,
 		ssl: {
-			ca: fs.readFileSync(process.env.DATABASE_CA_CERT || "/etc/ssl/certs/ca-certificates.crt"),
+			ca: process.env.DATABASE_CA_CERT || fs.readFileSync(process.env.DATABASE_CA_CERT_PATH || "/etc/ssl/certs/ca-certificates.crt"),
 		},
 	};
 	let client;
