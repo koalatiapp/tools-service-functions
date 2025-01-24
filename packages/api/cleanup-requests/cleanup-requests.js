@@ -6,7 +6,7 @@ exports.main = async (request) => {
 	}
 
 	const queue = require("./utils/queue.js")();
-	await queue.deleteOldRequests();
+	await queue.deassignOldRequests();
 	await queue.disconnect();
 
 	return {

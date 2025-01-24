@@ -19,13 +19,14 @@ class Queue {
 		await this.database.end();
 	}
 
-	async deleteOldRequests() {
+	async deassignOldRequests() {
 		await this._waitForDatabaseConnection();
 		await this.database.query(`
-            DELETE
-			FROM requests
+            UPDATE requests
+			SET processed_at = NULL,
+				processed_by = NULL
 			WHERE processed_at IS NOT NULL
-			AND processed_at < (NOW() - interval 2 week)
+			AND processed_at < (NOW() - interval 1 minute)
         `);
 	}
 }
