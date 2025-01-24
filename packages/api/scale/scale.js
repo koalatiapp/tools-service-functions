@@ -80,7 +80,7 @@ exports.main = async (request) => {
 		try {
 			await digitalOcean.app.updateApp({ app_id: TOOL_SERVICE_APP_ID, spec });
 		} catch (e) {
-			console.error(e);
+			console.log("ERROR IN DO SCALE CALL:", e);
 
 			return {
 				headers:  { 'content-type': 'application/json; charset=UTF-8' },
@@ -89,7 +89,6 @@ exports.main = async (request) => {
 					totalPendingRequests,
 					idealContainerCount,
 					currentContainerCount,
-					error: e,
 				})
 			};
 		}
