@@ -89,6 +89,7 @@ exports.main = async (request) => {
 					totalPendingRequests,
 					idealContainerCount,
 					currentContainerCount,
+					error: e,
 				})
 			};
 		}
