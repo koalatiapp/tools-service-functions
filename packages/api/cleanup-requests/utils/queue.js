@@ -24,8 +24,8 @@ class Queue {
 		await this.database.query(`
             DELETE
 			FROM requests
-			WHERE completed_at IS NOT NULL
-			AND completed_at < (NOW() - interval 2 week)
+			WHERE processed_at IS NOT NULL
+			AND processed_at < (NOW() - interval 2 week)
         `);
 	}
 }
