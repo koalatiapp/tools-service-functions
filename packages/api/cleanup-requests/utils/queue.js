@@ -26,7 +26,7 @@ class Queue {
 			SET processed_at = NULL,
 				processed_by = NULL
 			WHERE processed_at IS NOT NULL
-			AND processed_at < (NOW() - interval 1 minute)
+			AND processed_at < (NOW() - interval 2 minute)
         `);
 	}
 }
