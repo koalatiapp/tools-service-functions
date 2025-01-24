@@ -77,7 +77,21 @@ exports.main = async (request) => {
 		console.log(`Sending DO an app spec update...`);
 
 		spec.services[0].instance_count = idealContainerCount;
-		await digitalOcean.app.updateApp({ app_id: TOOL_SERVICE_APP_ID, spec });
+		try {
+			await digitalOcean.app.updateApp({ app_id: TOOL_SERVICE_APP_ID, spec });
+		} catch (e) {
+			console.error(e);
+
+			return {
+				headers:  { 'content-type': 'application/json; charset=UTF-8' },
+				body: JSON.stringify({
+					success: false,
+					totalPendingRequests,
+					idealContainerCount,
+					currentContainerCount,
+				})
+			};
+		}
 
 		console.log(`The app has been updated on DO!`);
 	}
